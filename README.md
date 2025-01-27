@@ -1,11 +1,12 @@
-# G_Stock1
+
 # Cahier des Charges - Application Web de Gestion de Stock
 ## Table des matières
 1. [Introduction](#introduction)
 2. [Architecture du Système](#architecture-du-système)
 3. [Spécifications Techniques](#spécifications-techniques)
 4. [Modèle de Données](#modèle-de-données)
-5. [Planning et Livrables](#planning-et-livrables)
+5. [Diagramme Entité-Relation (ERD)](#diagramme-entité-relation-erd)
+6. [Planning et Livrables](#planning-et-livrables)
 
 ## 1. Introduction
 ### 1.1 Contexte
@@ -149,14 +150,83 @@ Table LIGNE_COMMANDE {
 - LigneCommande ↔ Commande (One-to-Many)
 - LigneCommande ↔ Produit (One-to-Many)
 
-## 5. Planning et Livrables
-### 5.1 Planning
+## 5. Diagramme Entité-Relation (ERD)
+```mermaid
+erDiagram
+    PRODUIT {
+        int id PK
+        string nom
+        string categorie
+        int quantite
+        decimal prix
+        string description
+        datetime created_at
+        datetime updated_at
+    }
+    
+    CLIENT {
+        int id PK
+        string nom
+        string email
+        string telephone
+        string adresse
+        datetime created_at
+        datetime updated_at
+    }
+    
+    UTILISATEUR {
+        int id PK
+        string nom
+        string email
+        string mot_de_passe
+        enum role
+        datetime created_at
+        datetime updated_at
+    }
+    
+    MOUVEMENT {
+        int id PK
+        int produit_id FK
+        int utilisateur_id FK
+        enum type
+        int quantite
+        datetime date
+        string commentaire
+    }
+
+    COMMANDE {
+        int id PK
+        int client_id FK
+        datetime date_commande
+        string statut
+        decimal montant_total
+    }
+
+    LIGNE_COMMANDE {
+        int id PK
+        int commande_id FK
+        int produit_id FK
+        int quantite
+        decimal prix_unitaire
+    }
+
+    MOUVEMENT ||--|| PRODUIT : "concerne"
+    MOUVEMENT ||--|| UTILISATEUR : "effectué par"
+    COMMANDE ||--|| CLIENT : "passée par"
+    LIGNE_COMMANDE }|--|| COMMANDE : "appartient à"
+    LIGNE_COMMANDE ||--|| PRODUIT : "contient"
+```
+
+## 6. Planning et Livrables
+### 6.1 Planning
 1. Analyse des besoins : 2 semaines
 2. Développement : 12 semaines
 3. Tests et intégration : 4 semaines
 
-### 5.2 Livrables
+### 6.2 Livrables
 1. Microservices avec APIs
 2. Interface Angular
 3. Documentation technique
 4. Tests validés
+```
+
